@@ -4,8 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const { port } = require('pg/lib/defaults');
 const {
-    DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, DATABASE_URL,
-    HOST, DATABASE, USER, PORT, PASSWORD
+    DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, 
 } = process.env;
 
 
