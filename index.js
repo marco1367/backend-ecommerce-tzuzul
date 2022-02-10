@@ -141,7 +141,7 @@ conn.sync({ force: true })
 
         Products.bulkCreate(all_products).then(console.log('Carga de datos correcta'));
     
-        server.listen(API_PORT, () => {
+        server.listen(process.env.PORT || 5000, () => {
             console.log(`the server has listen port ${API_PORT}`);
         });
     })
