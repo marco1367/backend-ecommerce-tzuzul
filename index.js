@@ -1,9 +1,6 @@
 const server = require('./src/app');
 const {conn} = require('./src/db.js');
 const {Products} = require('./src/db');
-const {
-    API_PORT,
-} = process.env;
 
 
 // Syncing all the models at once.
