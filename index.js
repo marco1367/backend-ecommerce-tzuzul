@@ -1,10 +1,9 @@
 const server = require('./src/app');
 const {conn} = require('./src/db.js');
 const {Products} = require('./src/db');
-
-
-
-const api_port = 8000;
+const {
+    API_PORT,
+} = process.env;
 
 
 // Syncing all the models at once.
@@ -142,7 +141,7 @@ conn.sync({ force: true })
 
         Products.bulkCreate(all_products).then(console.log('Carga de datos correcta'));
     
-        server.listen(api_port, () => {
-            console.log(`the server has listen port ${api_port}`);
+        server.listen(API_PORT, () => {
+            console.log(`the server has listen port ${API_PORT}`);
         });
     })
