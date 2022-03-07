@@ -6,6 +6,11 @@ const jwt = require('jsonwebtoken');
 async function LogIn(req, res, next) {
     try {
         const { username, hashedPassword } = req.body;
+
+        if (!username || !hashedPassword || username === "" || hashedPassword === "") {
+            res.status(404).json({message:'todos los campos son requeridos'});
+        }
+
         const response_user = await User.findAll({
             where: {
                 username: username.toLowerCase(),
