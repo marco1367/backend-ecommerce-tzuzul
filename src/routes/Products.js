@@ -5,7 +5,7 @@ const {Auth} = require('../meaddlewares/authentication');
 
 const router = Router();
 
-router.get('/', Auth, GetAllProducts);
+router.get('/',Auth, GetAllProducts);
 router.get('/:id', GetProductDetail);
     
 module.exports = router;

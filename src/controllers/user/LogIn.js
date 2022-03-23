@@ -1,6 +1,10 @@
+require('dotenv').config();
 const { User } = require('../../db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const {
+    ACCES_TOKEN_SECRET, REFRESH_TOKEN_SECRET
+} = process.env;
 
 
 async function LogIn(req, res, next) {
@@ -24,10 +28,13 @@ async function LogIn(req, res, next) {
             if (pass_compare) {
                 jwt.sign(
                     { name: response_user[0].dataValues.username },
-                    response_user[0].dataValues.hashedPassword,
-                    // { algorithm: 'RS256' },
+                    ACCES_TOKEN_SECRET,
+                    {expiresIn:'1h'},
                     function (err, token) {
-                        console.log(token);
+                        if (err) {
+                            next(err);
+                        }
+                        // res.header('token', `${token}`);  //VER COMO HACER PARA ENVIARLO POR HEADER AL FRONT !!!!!
                         res.status(200).json({
                             message: 'acceso confirmado',
                             token: token,
