@@ -29,12 +29,11 @@ async function LogIn(req, res, next) {
                 jwt.sign(
                     { name: response_user[0].dataValues.username },
                     ACCES_TOKEN_SECRET,
-                    {expiresIn:'1h'},
+                    {expiresIn:'60s'},
                     function (err, token) {
                         if (err) {
                             next(err);
                         }
-                        // res.header('token', `${token}`);  //VER COMO HACER PARA ENVIARLO POR HEADER AL FRONT !!!!!
                         res.status(200).json({
                             message: 'acceso confirmado',
                             token: token,
