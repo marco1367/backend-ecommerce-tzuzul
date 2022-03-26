@@ -29,7 +29,7 @@ async function LogIn(req, res, next) {
                 jwt.sign(
                     { name: response_user[0].dataValues.username },
                     ACCES_TOKEN_SECRET,
-                    {expiresIn:'60s'},
+                    {expiresIn:'1h'},
                     function (err, token) {
                         if (err) {
                             next(err);
