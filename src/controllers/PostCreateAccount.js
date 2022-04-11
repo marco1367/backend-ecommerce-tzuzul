@@ -1,23 +1,25 @@
 const { user } = require('pg/lib/defaults');
-const { User } = require('../db');
+const { User, Rolle } = require('../db');
 const bcrypt = require('bcrypt');
 
 
+//(POST) FORMULARIO PARA CREAR UN "USER":
+//resibimos el username, email y pasword por body y con esos datos,
+//creamos un usuario en la tabla User de la DB con el rol de "user".
 async function PostCreateAccount(req, res, next) {
-    const { username, email, hashedPassword } = req.body;
+    console.log(req.body);//-----
+    console.log(req.file);//-----
+    const { username, email, hashedPassword} = req.body;
 
     //FALTA VALIDAR LOS CAMPOS username Y email ------------------------------------------
     if (!username || !email || !hashedPassword) {
-        res.status(404).send({messenge: 'todos los campos son obligatorios'});
+        return res.status(404).send({messenge: 'todos los campos son obligatorios'});
     }
 
     let messenge = {
         username_exist: false,
         email_exist: false,
-        user: {
-            newUser: false,
-            user: null
-        }
+        newUser: false,
     }
 
     try {
@@ -42,28 +44,40 @@ async function PostCreateAccount(req, res, next) {
 
 
         if (!messenge.username_exist && !messenge.email_exist) {
-            //encriptacion de contraseña:
-            const salt = await bcrypt.genSalt(10);
-            const hashPasswiorBCrypt = await bcrypt.hash(hashedPassword, salt);
-            //creamos el usuario (usamos findOrCreate metodo por las dudas):
-            const user_result = await User.findOrCreate({
-                where: {
-                    username: username.toLowerCase(),
-                    email: email,
-                    hashedPassword: hashPasswiorBCrypt,
+            //buscamos el id del roll user para hacer lugo la vinculacion:
+            const rolle_response = await Rolle.findOne({
+                where:{
+                    name: 'user',
                 }
-            });
-            if (user_result[1]) {
-                messenge.user.newUser = true;
-                messenge.user.user = user_result[0];
+            })            
+
+            if (rolle_response) {
+                //encriptacion de contraseña:
+                const salt = await bcrypt.genSalt(10);
+                const hashPasswiorBCrypt = await bcrypt.hash(hashedPassword, salt);
+                //creamos el usuario (usamos findOrCreate metodo por las dudas):
+                const user_result = await User.findOrCreate({
+                    where: {
+                        username: username.toLowerCase(),
+                        email: email,
+                        hashedPassword: hashPasswiorBCrypt,
+                    }
+                });
+    
+                if (user_result[1]) {
+                    //vinculamos usuario y roll:
+                    await user_result[0].setRolle(rolle_response);
+                    messenge.newUser = true;
+                }
             }
+
         }
 
-        res.status(200).json(messenge);
+        return res.status(200).json(messenge);
 
 
     } catch (error) {
-        next(error);
+        return res.status(400).json({Message: 'Upss, algo pasó!. Intente nuevamente en unos minutos o con otros valores. '})
     }
 };
 
