@@ -3,11 +3,12 @@ const { User, Rolle } = require('../db');
 const bcrypt = require('bcrypt');
 
 
-
 //(POST) FORMULARIO PARA CREAR UN "USER":
 //resibimos el username, email y pasword por body y con esos datos,
 //creamos un usuario en la tabla User de la DB con el rol de "user".
 async function PostCreateAccount(req, res, next) {
+    console.log(req.body);//-----
+    console.log(req.file);//-----
     const { username, email, hashedPassword} = req.body;
 
     //FALTA VALIDAR LOS CAMPOS username Y email ------------------------------------------
@@ -18,10 +19,7 @@ async function PostCreateAccount(req, res, next) {
     let messenge = {
         username_exist: false,
         email_exist: false,
-        user: {
-            newUser: false,
-            user: null
-        }
+        newUser: false,
     }
 
     try {
@@ -46,7 +44,7 @@ async function PostCreateAccount(req, res, next) {
 
 
         if (!messenge.username_exist && !messenge.email_exist) {
-            //buscamos el rolle con el Id proporcionado:
+            //buscamos el id del roll user para hacer lugo la vinculacion:
             const rolle_response = await Rolle.findOne({
                 where:{
                     name: 'user',
@@ -67,9 +65,9 @@ async function PostCreateAccount(req, res, next) {
                 });
     
                 if (user_result[1]) {
+                    //vinculamos usuario y roll:
                     await user_result[0].setRolle(rolle_response);
-                    messenge.user.newUser = true;
-                    messenge.user.user = user_result[0];
+                    messenge.newUser = true;
                 }
             }
 
@@ -79,7 +77,7 @@ async function PostCreateAccount(req, res, next) {
 
 
     } catch (error) {
-        next(error);
+        return res.status(400).json({Message: 'Upss, algo pasó!. Intente nuevamente en unos minutos o con otros valores. '})
     }
 };
 
