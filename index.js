@@ -142,7 +142,7 @@ conn.sync({ force: true })
         // Products.bulkCreate(all_products).then(console.log('Carga de datos de PRODUCTOS correcta'));
         // Rolle.bulkCreate(rolles).then(console.log('Carga de datos ROLLES correcta'));
     
-        server.listen(process.env.PORT, () => {
+        server.listen(PORT, () => {
             console.log(`the server has listen port ${PORT}`);
         });
     })
