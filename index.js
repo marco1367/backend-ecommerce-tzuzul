@@ -1,9 +1,9 @@
 const server = require('./src/app');
 const {conn} = require('./src/db.js');
 const {Products, Rolle} = require('./src/db');
-const {
-    PORT,
-} = process.env;
+// const {
+//     PORT,
+// } = process.env;
 const {rolles} = require('./src/datos');
 
 // Syncing all the models at once.
@@ -142,7 +142,7 @@ conn.sync({ force: true })
         // Products.bulkCreate(all_products).then(console.log('Carga de datos de PRODUCTOS correcta'));
         // Rolle.bulkCreate(rolles).then(console.log('Carga de datos ROLLES correcta'));
     
-        server.listen(process.env.PORT, () => {
-            console.log(`the server has listen port ${PORT}`);
+        server.listen(process.env.PORT || 8000, () => {
+            console.log(`the server has listen port ${process.env.PORT}`);
         });
     })
