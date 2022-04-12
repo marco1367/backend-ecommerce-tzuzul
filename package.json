@@ -24,5 +24,8 @@
     "pg": "^8.7.1",
     "redux-thunk": "^2.4.1",
     "sequelize": "^6.14.1"
+  },
+  "engines": {
+    "node": "16.x"
   }
 }
